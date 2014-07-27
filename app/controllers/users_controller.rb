@@ -5,28 +5,19 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
 
-    response = Rest.get "/coordinates"
+    response = Rest.get "/one/points", {
+      la: 40.7128,
+      lo: -74.0059
+    }
 
-    new = response.body.lat
-    #raise "#{new}"
-
-    @users = User.all
-
-    @users = User.all
-    @hash = Gmaps4rails.build_markers(@users) do |user, marker|
-      marker.lat response.body.lat
-      marker.lng response.body.long
-      marker.infowindow user.description
-      marker.picture({
-       "url" => "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
-       "width" =>  32,
-       "height" => 32})
-      marker.infowindow user.description
-      marker.json({ title: user.title })
+    @nes = response.body.points
+    @hash = Gmaps4rails.build_markers(@nes) do |ne, marker|
+      marker.lat ne.la
+      marker.lng ne.lo
+      marker.infowindow ne.name
+      marker.json({ title: ne.name })
     end
-    #0raise "#{@hash}"
 
-    #build hash using jbuilder
   end
 
   # GET /users/1
